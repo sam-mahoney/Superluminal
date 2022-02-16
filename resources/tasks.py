@@ -5,8 +5,16 @@ from flask import request, Response
 from flask_restful import Resource
 
 
-# TODO - add a description resource
+# TODO - complete docstring
 class Tasks(Resource):
+    """
+    Tasks is the API resource used to fetch (get) and create tasks (post)
+
+    Methods
+    -------
+    get  : returns current tasks in JSON format (CLI)
+    post : add task(s) to the database (CLI)
+    """
     # Returns tasks
     def get(self):
         # TODO - implement get logic
