@@ -8,19 +8,19 @@ class Results(Resource):
 
     Methods
     -------
-    get  : returns all results objects to user (CLI)
-    post : adds result(s) to the database (implant)
+    get  : returns all results objects to user (-> CLI)
+    post : adds result(s) to the database      (implant ->)
     """
     # List results
     def get(self):
-        # TODO - implement get logic
+        # TODO - implement GET logic
         # Get all the result objects and return them to the user
         # Server -> HTTP -> CLI
         results = {'task_id': 0}
         return Response(results, mimetype="application/json", status=200)
 
     def post(self):
-        # TODO - implement post logic
+        # TODO - implement POST logic
         # Add result to db
         # Implant -> HTTP -> Server
         result = 0
