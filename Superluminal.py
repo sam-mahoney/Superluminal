@@ -6,6 +6,7 @@ from database.db import initialise_db
 from resources.foo import Foo
 from resources.bing import Bing
 from resources.tasks import Tasks
+from resources.current_task import CurrentTask
 from resources.results import Results
 
 # Initialise Flask app and API
@@ -27,6 +28,7 @@ api.add_resource(Bing, '/Bing')
 
 # Define the routes for API Resources
 api.add_resource(Tasks, '/tasks', endpoint='tasks')
+api.add_resource(CurrentTask, '/task')
 api.add_resource(Results, '/results')
 
 
