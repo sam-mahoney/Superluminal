@@ -20,6 +20,10 @@ class NextTask(Resource):
             print("[!] Queue is empty")
             error = {"status code": "400", "error": "empty queue"}
             return Response(json.dumps(error), status=400)
+        if next_task_in_queue['task_status'] == Status.EXECUTING.name:
+            print("[!] Requesting new task before returning results of previous task")
+            error = {"status code": "400", "error": "RESULTS MUST BE RETURNED BEFORE REQUESTING NEXT TASK"}
+            return Response(json.dumps(error), status=400)
         # Check the task is waiting to be executed
         if next_task_in_queue['task_status'] != Status.WAITING.name:
             # If the next Task isn't waiting delete it
