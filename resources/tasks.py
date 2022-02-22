@@ -4,10 +4,11 @@ import json
 from flask import request, Response
 from flask_restful import Resource
 
-from database.models import Task
+from database.models import Task, TaskHistory
 from common.parse_utils import parse_request
+from common.types.task_types import Status
 
-# TODO - complete docstring
+
 class Tasks(Resource):
     """
     Tasks is the API resource used to fetch (GET) and create tasks (POST)
@@ -24,7 +25,6 @@ class Tasks(Resource):
 
     # Returns all tasks
     def get(self):
-        # TODO - implement GET logic
         tasks = Task.objects().to_json()
         # mimetype: a two-part identifier for file formats and format contents transmitted on the Internet.
         return Response(tasks, mimetype="application/json", status=200)
@@ -32,7 +32,7 @@ class Tasks(Resource):
     # Adds a task
     def post(self):
         """
-        POST Request example
+        POST Request Example
         --------------------
 
         POST /tasks HTTP/1.1
@@ -57,7 +57,8 @@ class Tasks(Resource):
             print(f"[!] current obj => {json_obj[i]}")
             # Assign a UUID to the task
             json_obj[i]['task_id'] = str(uuid.uuid4())
-            json_obj[i]['executing'] = False
+            json_obj[i]['task_status'] = Status.WAITING.name
+            print(f"task_status => {json_obj[i]['task_status']}")
             # **kwargs - This allows us to pass a dict as the func arg
             # Creates a new Task from the current task represented by a {}.
             Task(**json_obj[i]).save()
@@ -69,6 +70,15 @@ class Tasks(Resource):
                 if key != "task_id" and key != "task_type":
                     task_args.append(f"{key}:  {json_obj[i][key]}")
             print(f"[!] task_args => {task_args}")
+            # Add to task history
+            TaskHistory(
+                task_id=json_obj[i]['task_id'],
+                task_type=json_obj[i]['task_type'],
+                task_object=json.dumps(json_obj),
+                task_arguements=task_args,
+                task_status=json_obj[i]['task_status'],
+                task_results=""
+            ).save()
         # Respond with the tasks added in the POST request
         # obj_num represents the number of tasks sent in the request
         # count = total number of tasks.

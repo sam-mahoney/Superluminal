@@ -1,14 +1,6 @@
 from database.db import db
 
 
-# Define the Task object
-
-
-# ------------------------------
-# |    task_id    |    UUID    |
-# |   task_type   |   string   |
-# |     args      |    list    |
-#
 class Task(db.DynamicDocument):
     task_id = db.StringField(required=True)
 
@@ -16,3 +8,7 @@ class Task(db.DynamicDocument):
 class Result(db.DynamicDocument):
     result_id = db.StringField(required=True)
     task_id = db.StringField(required=True)
+
+
+class TaskHistory(db.DynamicDocument):
+    task_object = db.StringField()
