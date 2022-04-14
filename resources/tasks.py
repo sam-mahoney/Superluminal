@@ -63,7 +63,6 @@ class Tasks(Resource):
             # Creates a new Task from the current task represented by a {}.
             Task(**json_obj[i]).save()
             # List to store args for this Task
-            # This logic doesn't do anything?
             task_args = []
             for key in json_obj[i].keys():
                 # For any key which isn't the id or type append it to list

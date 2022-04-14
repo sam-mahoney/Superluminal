@@ -45,6 +45,7 @@ class Results(Resource):
 
         """
         print("[!] REQUEST: '/results (POST)'")
+        status = Status.EXECUTING.name
         # Parse the request into json
         json_obj, _ = parse_request(request.get_json())
         print(f"results json_obj => {json_obj}")
@@ -60,18 +61,19 @@ class Results(Resource):
         json_head = json.loads(head.to_json())[0]
         # Check if the implant executed the Task successfully
         if not json_obj['success']:
-            json_head['task_status'] = Status.FAILED.name
-        # check task_id's match and check task is executing
-        if json_head['task_id'] != json_obj['task_id'] \
-                or json_head['task_status'] != Status.EXECUTING.name:
-            error = {"status code": "400", "error": "invalid task"}
-            return Response(json.dumps(error), status=400)
+            status = Status.FAILED.name
+        else:
+            # check task_id's match and check task is executing
+            if json_head['task_id'] != json_obj['task_id'] \
+                    or status != Status.EXECUTING.name:
+                error = {"status code": "400", "error": "invalid task"}
+                return Response(json.dumps(error), status=400)
         task_id = json_obj['task_id']
         # 1. query documents in history collection by task_id
         history_obj = TaskHistory.objects().get(task_id=task_id)
         print(f"History_Obj = {history_obj['task_id']}")
         # Update the corresponding history document
-        history_obj['task_status'] = Status.EXECUTED.name
+        history_obj['task_status'] = status
         history_obj['task_results'] = json_obj
         history_obj.save()
         # Delete the Task
